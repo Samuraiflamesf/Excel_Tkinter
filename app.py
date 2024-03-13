@@ -8,41 +8,32 @@ arquivo2 = None
 lbl_arquivo1 = None
 lbl_arquivo2 = None
 
-def carregar_planilha1(nome_arquivo):
+def carregar_planilha(nome_arquivo):
     try:
         # Carregar a planilha usando pandas
-        planilha = pd.read_excel(nome_arquivo,skiprows=1)
-        return planilha
+        if nome_arquivo == arquivo1:
+            planilha = pd.read_excel(nome_arquivo, skiprows=1)
+            return planilha
+        if nome_arquivo == arquivo2:
+            planilha = pd.read_excel(nome_arquivo)
+            return planilha
     except FileNotFoundError:
         messagebox.showerror("Erro", "Arquivo não encontrado.")
         return None
-
-
-def carregar_planilha2(nome_arquivo):
-    try:
-        # Carregar a planilha usando pandas
-        planilha = pd.read_excel(nome_arquivo)
-        return planilha
-    except FileNotFoundError:
-        messagebox.showerror("Erro", "Arquivo não encontrado.")
-        return None
-
 
 def acompGuia():
     global arquivo1
     arquivo1 = filedialog.askopenfilename(
         title="Selecione a planilha AcompGuia")
     lbl_arquivo1['text'] = f"{arquivo1}"
-    return carregar_planilha1(arquivo1)
-
+    return carregar_planilha(arquivo1)
 
 def relacaoSaidaData():
     global arquivo2
     arquivo2 = filedialog.askopenfilename(
         title="Selecione a planilha relacaoSaidaData")
     lbl_arquivo2['text'] = f"{arquivo2}"
-    return carregar_planilha2(arquivo2)
-
+    return carregar_planilha(arquivo2)
 
 def reset_arquivos():
     global arquivo1, arquivo2
@@ -52,7 +43,6 @@ def reset_arquivos():
     lbl_arquivo2['text'] = "RelacaoSaidaData: "
     messagebox.showinfo("Informação", "Arquivos resetados com sucesso!")
 
-
 def app():
     global arquivo1, arquivo2
 
@@ -60,12 +50,10 @@ def app():
         messagebox.showerror('Erro', 'Selecione ambas as planilhas!')
         return
     try:
-        planilha1 = carregar_planilha1(arquivo1)
-        planilha2 = carregar_planilha2(arquivo2)
+        planilha1 = carregar_planilha(arquivo1)
+        planilha2 = carregar_planilha(arquivo2)
+        planilha1
         messagebox.showinfo("Informação", "Planilhas carregadas com sucesso!")
-        
-        print(planilha1.head())
-        print(planilha2.head())
 
         # Verificar se as colunas 'Guia' e 'Destino' existem em planilha1
         if 'Guia' not in planilha1.columns or 'Destino' not in planilha1.columns:
@@ -99,11 +87,9 @@ def app():
     except FileNotFoundError:
         messagebox.showinfo('Erro', 'Selecione as duas planilhas!')
 
-
 def fechar_janela(janela):
     if messagebox.askokcancel("Fechar", "Tem certeza que deseja fechar?"):
         janela.destroy()
-
 
 def main():
     janela = tk.Tk()
@@ -157,8 +143,6 @@ def main():
     btn_fechar.grid(row=8, column=2, padx=margem, pady=margem, sticky='w')
 
     janela.mainloop()
-
-
 
 if __name__ == "__main__":
     main()
