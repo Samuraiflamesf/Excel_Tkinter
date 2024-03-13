@@ -8,6 +8,7 @@ arquivo2 = None
 lbl_arquivo1 = None
 lbl_arquivo2 = None
 
+
 def carregar_planilha(nome_arquivo):
     try:
         # Carregar a planilha usando pandas
@@ -21,12 +22,14 @@ def carregar_planilha(nome_arquivo):
         messagebox.showerror("Erro", "Arquivo não encontrado.")
         return None
 
+
 def acompGuia():
     global arquivo1
     arquivo1 = filedialog.askopenfilename(
         title="Selecione a planilha AcompGuia")
     lbl_arquivo1['text'] = f"{arquivo1}"
     return carregar_planilha(arquivo1)
+
 
 def relacaoSaidaData():
     global arquivo2
@@ -35,6 +38,7 @@ def relacaoSaidaData():
     lbl_arquivo2['text'] = f"{arquivo2}"
     return carregar_planilha(arquivo2)
 
+
 def reset_arquivos():
     global arquivo1, arquivo2
     arquivo1 = None
@@ -42,6 +46,7 @@ def reset_arquivos():
     lbl_arquivo1['text'] = "AcompGuia: "
     lbl_arquivo2['text'] = "RelacaoSaidaData: "
     messagebox.showinfo("Informação", "Arquivos resetados com sucesso!")
+
 
 def app():
     global arquivo1, arquivo2
@@ -76,7 +81,10 @@ def app():
             'Nº ', '')
         planilha2 = planilha2.rename(columns={'num_documento': 'Guia'})
         planilha2["Guia"] = planilha2["Guia"].str.strip()
-        app_excel = pd.merge(planilha1, planilha2, on='Guia')
+        app_excel = pd.merge(planilha2, planilha1, on='Guia', how='left')
+        app_excel = app_excel.drop_duplicates()
+        app_excel = app_excel[['Guia', 'Destino', 'Item', 'Nome Item', 'unid_med_ent',
+                              'data_lancamento', 'Desc_Mov', 'RMRS', 'qtde', 'Valor Unitário', 'Valor Total']]
 
         # Salvando o arquivo mesclado
         arquivo_saida = filedialog.asksaveasfilename(defaultextension=".xlsx")
@@ -87,9 +95,11 @@ def app():
     except FileNotFoundError:
         messagebox.showinfo('Erro', 'Selecione as duas planilhas!')
 
+
 def fechar_janela(janela):
     if messagebox.askokcancel("Fechar", "Tem certeza que deseja fechar?"):
         janela.destroy()
+
 
 def main():
     janela = tk.Tk()
@@ -143,6 +153,7 @@ def main():
     btn_fechar.grid(row=8, column=2, padx=margem, pady=margem, sticky='w')
 
     janela.mainloop()
+
 
 if __name__ == "__main__":
     main()
