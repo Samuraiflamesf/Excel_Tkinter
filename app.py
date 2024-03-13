@@ -8,7 +8,17 @@ arquivo2 = None
 lbl_arquivo1 = None
 lbl_arquivo2 = None
 
-def carregar_planilha(nome_arquivo):
+def carregar_planilha1(nome_arquivo):
+    try:
+        # Carregar a planilha usando pandas
+        planilha = pd.read_excel(nome_arquivo,skiprows=1)
+        return planilha
+    except FileNotFoundError:
+        messagebox.showerror("Erro", "Arquivo não encontrado.")
+        return None
+
+
+def carregar_planilha2(nome_arquivo):
     try:
         # Carregar a planilha usando pandas
         planilha = pd.read_excel(nome_arquivo)
@@ -23,7 +33,7 @@ def acompGuia():
     arquivo1 = filedialog.askopenfilename(
         title="Selecione a planilha AcompGuia")
     lbl_arquivo1['text'] = f"{arquivo1}"
-    return carregar_planilha(arquivo1)
+    return carregar_planilha1(arquivo1)
 
 
 def relacaoSaidaData():
@@ -31,7 +41,7 @@ def relacaoSaidaData():
     arquivo2 = filedialog.askopenfilename(
         title="Selecione a planilha relacaoSaidaData")
     lbl_arquivo2['text'] = f"{arquivo2}"
-    return carregar_planilha(arquivo2)
+    return carregar_planilha2(arquivo2)
 
 
 def reset_arquivos():
@@ -50,9 +60,12 @@ def app():
         messagebox.showerror('Erro', 'Selecione ambas as planilhas!')
         return
     try:
-        planilha1 = carregar_planilha(arquivo1)
-        planilha2 = carregar_planilha(arquivo2)
+        planilha1 = carregar_planilha1(arquivo1)
+        planilha2 = carregar_planilha2(arquivo2)
         messagebox.showinfo("Informação", "Planilhas carregadas com sucesso!")
+        
+        print(planilha1.head())
+        print(planilha2.head())
 
         # Verificar se as colunas 'Guia' e 'Destino' existem em planilha1
         if 'Guia' not in planilha1.columns or 'Destino' not in planilha1.columns:
