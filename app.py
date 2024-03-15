@@ -57,7 +57,6 @@ def app():
     try:
         planilha1 = carregar_planilha(arquivo1)
         planilha2 = carregar_planilha(arquivo2)
-        planilha1
         messagebox.showinfo("Informação", "Planilhas carregadas com sucesso!")
 
         # Verificar se as colunas 'Guia' e 'Destino' existem em planilha1
